@@ -25,7 +25,22 @@ public class NodoIoT {
      */
     public Sensor agregarSensor(String tipo, String idSensor, int capacidad) {
         // TODO: implementar (polimorfismo + composición)
-        return null;
+
+        Sensor sensor = null;
+
+        if (tipo.equals("TEMPERATURA")) {
+            sensor = new SensorTemperatura(idSensor, capacidad);
+        } else if (tipo.equals("HUMEDAD")) {
+            sensor = new SensorHumedad(idSensor, capacidad);
+        } else if (tipo.equals("LUMINOSIDAD")) {
+            sensor = new SensorLuminosidad(idSensor, capacidad);
+        }
+
+        if (sensor != null) {
+            sensores.add(sensor);
+        }
+
+        return sensor;
     }
 
     /**
@@ -34,7 +49,23 @@ public class NodoIoT {
      */
     public double promedioTemperatura() {
         // TODO: implementar
-        return 0;
+
+        double suma = 0;
+        int cantidad = 0;
+
+        for (Sensor sensor : sensores) {
+
+            if (sensor instanceof SensorTemperatura) {
+                suma += sensor.promedioUltimasLecturas();
+                cantidad++;
+            }
+        }
+
+        if (cantidad == 0) {
+            return 0;
+        }
+
+        return suma / cantidad;
     }
 
     /**
@@ -42,7 +73,28 @@ public class NodoIoT {
      */
     public List<Sensor> sensoresFueraDeRango() {
         // TODO: implementar
-        return new ArrayList<>();
+
+        List<Sensor> fuera = new ArrayList<>();
+
+        for (Sensor sensor : sensores) {
+
+            if (sensor.getCantidadLecturas() > 0) {
+
+                int[] lecturas = sensor.getUltimasLecturas();
+
+                int ultimaPos =
+                        (sensor.getIndiceActual() - 1 + lecturas.length)
+                                % lecturas.length;
+
+                int ultimaLectura = lecturas[ultimaPos];
+
+                if (sensor.fueraDeRango(ultimaLectura)) {
+                    fuera.add(sensor);
+                }
+            }
+        }
+
+        return fuera;
     }
 
     public String getId() { return id; }

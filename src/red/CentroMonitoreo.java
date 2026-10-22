@@ -19,6 +19,10 @@ public class CentroMonitoreo {
     /** Agrega un nodo ya existente (agregación). */
     public void agregarNodo(NodoIoT nodo) {
         // TODO: implementar
+
+        if (nodo != null) {
+            nodos.add(nodo);
+        }
     }
 
     /**
@@ -26,9 +30,21 @@ public class CentroMonitoreo {
      */
     public List<String> reporteTemperaturas() {
         // TODO: implementar
-        return new ArrayList<>();
+
+        List<String> reporte = new ArrayList<>();
+
+        for (NodoIoT nodo : nodos) {
+            reporte.add(nodo.getId() + ": " + nodo.promedioTemperatura());
+        }
+
+        return reporte;
     }
 
-    public String getNombre() { return nombre; }
-    public ArrayList<NodoIoT> getNodos() { return nodos; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public ArrayList<NodoIoT> getNodos() {
+        return nodos;
+    }
 }
